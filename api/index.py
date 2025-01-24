@@ -20,7 +20,10 @@ class Handler(BaseHTTPRequestHandler):
                 names = [param.split("=")[1] for param in params if param.startswith("name=")]
 
                 # Fetch marks for the given names
-                result = {"marks": [student["marks"] for student in students if student["name"] in names]}
+                marks = [student["marks"] for student in students if student["name"] in names]
+                marks.reverse()  # Reverse the marks array
+
+                result = {"marks": marks}
 
                 # Return the response
                 self.send_response(200)
