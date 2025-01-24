@@ -6,8 +6,8 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             # Resolve the absolute path of students.json
-            current_dir = os.path.dirname(__file__)  # Directory of index.py
-            json_path = os.path.join(current_dir, "students.json")  # Full path to students.json
+            current_dir = os.path.dirname(__file__)
+            json_path = os.path.join(current_dir, "students.json")
 
             # Load student data from the JSON file
             with open(json_path, "r") as file:
@@ -24,7 +24,7 @@ class Handler(BaseHTTPRequestHandler):
 
                 # Return the response
                 self.send_response(200)
-                self.send_header("Content-Type", "application/json")
+                self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.send_header("Access-Control-Allow-Origin", "*")  # Enable CORS
                 self.end_headers()
                 self.wfile.write(json.dumps(result).encode("utf-8"))
@@ -35,7 +35,7 @@ class Handler(BaseHTTPRequestHandler):
         except Exception as e:
             # Handle exceptions and return a 500 response
             self.send_response(500)
-            self.send_header("Content-Type", "text/plain")
+            self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.end_headers()
             self.wfile.write(f"Internal Server Error: {str(e)}".encode("utf-8"))
 
