@@ -8,23 +8,28 @@ class Handler(BaseHTTPRequestHandler):
             # Resolve the absolute path of students.json
             current_dir = os.path.dirname(__file__)
             json_path = os.path.join(current_dir, "students.json")
-
+            
             # Load student data from the JSON file
             with open(json_path, "r") as file:
                 students = json.load(file)
-
+                
             # Parse the query parameters
             query = self.path.split("?")
             if len(query) > 1 and query[0] == "/api":
                 params = query[1].split("&")
+                # Extract names while preserving order
                 names = [param.split("=")[1] for param in params if param.startswith("name=")]
-
-                # Fetch marks for the given names
-                marks = [student["marks"] for student in students if student["name"] in names]
-                marks.reverse()  # Reverse the marks array
-
+                
+                # Fetch marks for the given names in the same order as requested
+                marks = []
+                for name in names:
+                    for student in students:
+                        if student["name"] == name:
+                            marks.append(student["marks"])
+                            break
+                
                 result = {"marks": marks}
-
+                
                 # Return the response
                 self.send_response(200)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
